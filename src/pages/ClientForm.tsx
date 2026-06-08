@@ -161,11 +161,11 @@ export default function ClientForm() {
   ];
 
   return (
-    <div className="py-8 px-4 sm:px-6 lg:px-8 bg-[#2A2420] text-[#F3EFE0] min-h-screen">
+    <div className="py-8 px-4 sm:px-6 lg:px-8 bg-[#0F172A] text-[#F8FAFC] min-h-screen">
       <div className="max-w-5xl mx-auto space-y-0">
         
         {/* Navigation Steps Header */}
-        <div className="bg-[#211C18] border border-[#3D342E] rounded-t-xl px-6 sm:px-10 flex items-center justify-between overflow-x-auto hide-scrollbar gap-6 h-20 shadow-md relative z-10 w-full mb-[-1px]">
+        <div className="bg-[#1E293B] border border-[#334155] rounded-t-xl px-6 sm:px-10 flex items-center justify-between overflow-x-auto hide-scrollbar gap-6 h-20 shadow-md relative z-10 w-full mb-[-1px]">
           {stepsHeader.map((step, idx) => {
             const isActive = currentStep === step.num;
             const isPast = currentStep > step.num;
@@ -173,31 +173,31 @@ export default function ClientForm() {
 
             return (
               <div key={step.num} className={`flex items-center gap-3 min-w-max py-4 h-full relative transition-all ${isActive ? 'opacity-100' : 'opacity-40'} ${step.num === 3 && !hasP2 ? 'opacity-10' : ''}`}>
-                <div className={`w-8 h-8 rounded-lg text-sm font-bold flex items-center justify-center shrink-0 transition-colors ${isActive ? 'bg-[#ECA118] text-[#422006]' : isPast ? 'bg-[#4a3411] text-[#ECA118]' : 'bg-[#12100E] border border-[#3D342E] text-white/40'}`}>
+                <div className={`w-8 h-8 rounded-lg text-sm font-bold flex items-center justify-center shrink-0 transition-colors ${isActive ? 'bg-[#F26522] text-[#FFFFFF]' : isPast ? 'bg-[#334155] text-[#F26522]' : 'bg-[#020617] border border-[#334155] text-white/40'}`}>
                   {isPast ? '✓' : step.num}
                 </div>
                 <div className="flex flex-col justify-center">
-                  <div className={`text-[13px] font-bold ${isActive || isPast ? 'text-[#ECA118]' : 'text-white/60'}`}>{step.title}</div>
+                  <div className={`text-[13px] font-bold ${isActive || isPast ? 'text-[#F26522]' : 'text-white/60'}`}>{step.title}</div>
                   <div className="text-white/40 text-[11px] font-medium leading-none mt-1">{step.subtitle}</div>
                 </div>
-                {isActive && <div className="absolute bottom-0 left-0 right-0 h-1 bg-[#ECA118] rounded-t-sm shadow-[0_0_10px_rgba(236,161,24,0.3)]" />}
+                {isActive && <div className="absolute bottom-0 left-0 right-0 h-1 bg-[#F26522] rounded-t-sm shadow-[0_0_10px_rgba(242,101,34,0.3)]" />}
               </div>
             );
           })}
         </div>
 
-        <div className="bg-[#211C18] border border-[#3D342E] rounded-b-xl p-6 sm:p-10 shadow-xl relative z-0 min-h-[500px]">
+        <div className="bg-[#1E293B] border border-[#334155] rounded-b-xl p-6 sm:p-10 shadow-xl relative z-0 min-h-[500px]">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-0" noValidate>
             
             {/* ================= STEP 1 ================= */}
             <div className={currentStep === 1 ? 'block space-y-12 animate-in fade-in slide-in-from-right-4' : 'hidden'}>
               <div>
-                <div className="mb-6 border-b border-[#3D342E] pb-4">
+                <div className="mb-6 border-b border-[#334155] pb-4">
                   <div className="flex items-center justify-between mb-1">
                     <h2 className="text-lg font-bold text-white tracking-tight">Identificação do Primeiro Proponente</h2>
-                    <button type="button" onClick={fillMockData} className="text-[#ECA118] text-xs font-bold hover:underline">✨ Preencher Rápido</button>
+                    <button type="button" onClick={fillMockData} className="text-[#F26522] text-xs font-bold hover:underline">✨ Preencher Rápido</button>
                   </div>
-                  <p className="text-[13px] text-blue-200/60">Insira abaixo os dados básicos de identidade do proponente titular da operação.</p>
+                  <p className="text-[13px] text-slate-400">Insira abaixo os dados básicos de identidade do proponente titular da operação.</p>
                 </div>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-8">
@@ -226,7 +226,7 @@ export default function ClientForm() {
               </div>
 
               <div>
-                <h3 className="text-xs font-bold text-white uppercase tracking-widest border-b border-[#3D342E] pb-2 mb-6">Endereço Residencial Atual (P1)</h3>
+                <h3 className="text-xs font-bold text-white uppercase tracking-widest border-b border-[#334155] pb-2 mb-6">Endereço Residencial Atual (P1)</h3>
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
                   <Input label="Rua / Logradouro *" className="md:col-span-2" name="p1.street" register={register} errors={errors} required />
                   <Input label="Número *" name="p1.number" register={register} errors={errors} required />
@@ -248,9 +248,9 @@ export default function ClientForm() {
             {/* ================= STEP 2 ================= */}
             <div className={currentStep === 2 ? 'block space-y-12 animate-in fade-in slide-in-from-right-4' : 'hidden'}>
                <div>
-                <div className="mb-6 border-b border-[#3D342E] pb-4">
+                <div className="mb-6 border-b border-[#334155] pb-4">
                   <h2 className="text-lg font-bold text-white tracking-tight">Perfil de Renda e Atividade Profissional (P1)</h2>
-                  <p className="text-[13px] text-blue-200/60 mt-2">Insira suas informações sobre atividade econômica atual para balizamento de renda.</p>
+                  <p className="text-[13px] text-slate-400 mt-2">Insira suas informações sobre atividade econômica atual para balizamento de renda.</p>
                 </div>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-8">
@@ -260,8 +260,8 @@ export default function ClientForm() {
                   
                   <div className="flex items-center mt-6">
                     <label className="flex items-center space-x-3 cursor-pointer">
-                      <input type="checkbox" {...register('p1.isOwner')} value="sim" className="w-5 h-5 text-[#ECA118] bg-[#14110F] border-[#3D342E] rounded focus:ring-[0]" />
-                      <span className="text-sm font-medium text-[#b5aa9d]">Sou proprietário / sócio desta empresa</span>
+                      <input type="checkbox" {...register('p1.isOwner')} value="sim" className="w-5 h-5 text-[#F26522] bg-[#020617] border-[#334155] rounded focus:ring-[0]" />
+                      <span className="text-sm font-medium text-[#94A3B8]">Sou proprietário / sócio desta empresa</span>
                     </label>
                   </div>
 
@@ -275,17 +275,17 @@ export default function ClientForm() {
                   <Input label="Origem / Comprovação de Outras Rendas" name="p1.otherIncomesOrigin" register={register} errors={errors} />
                 </div>
                 
-                <div className="mt-12 border border-[#ECA118]/20 bg-[#1A1613] p-6 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="mt-12 border border-[#F26522]/20 bg-[#111827] p-6 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <div className="flex items-start gap-4">
-                     <div className="mt-1 text-[#ECA118] text-xl">👥</div>
+                     <div className="mt-1 text-[#F26522] text-xl">👥</div>
                      <div>
                         <h3 className="text-[15px] font-bold text-white tracking-wide">Adicionar Cônjuge ou Segundo Proponente?</h3>
-                        <p className="text-[13px] text-blue-200/50 mt-1">Somar rendas de dois proponentes aumenta significativamente a margem de aprovação.</p>
+                        <p className="text-[13px] text-slate-400 mt-1">Somar rendas de dois proponentes aumenta significativamente a margem de aprovação.</p>
                      </div>
                   </div>
                   <label className="relative inline-flex items-center cursor-pointer shrink-0">
                     <input type="checkbox" {...register('hasP2')} className="sr-only peer" />
-                    <div className="w-14 h-7 bg-[#211C18] border border-[#3D342E] rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-[#12100E] after:border-gray-500 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-[#ECA118]"></div>
+                    <div className="w-14 h-7 bg-[#1E293B] border border-[#334155] rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-[#020617] after:border-gray-500 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-[#F26522]"></div>
                     <span className="ml-3 text-[13px] font-bold text-white/50 uppercase tracking-wider w-8">{hasP2 ? 'SIM' : 'NÃO'}</span>
                   </label>
                 </div>
@@ -294,14 +294,14 @@ export default function ClientForm() {
 
             {/* ================= STEP 3 ================= */}
             <div className={currentStep === 3 ? 'block space-y-12 animate-in fade-in slide-in-from-right-4' : 'hidden'}>
-              <div className="border border-[#ECA118]/20 bg-[#ECA118]/5 rounded-lg p-5 mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div className="border border-[#F26522]/20 bg-[#F26522]/5 rounded-lg p-5 mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
                   <h3 className="text-[15px] font-bold text-white flex items-center gap-2">
-                    <span className="text-[#ECA118]">👥</span> Segundo Proponente Coparticipante
+                    <span className="text-[#F26522]">👥</span> Segundo Proponente Coparticipante
                   </h3>
-                  <p className="text-[13px] text-blue-200/60 mt-1">Insira as informações do parceiro que agregará recursos ao pleito.</p>
+                  <p className="text-[13px] text-slate-400 mt-1">Insira as informações do parceiro que agregará recursos ao pleito.</p>
                 </div>
-                <button type="button" onClick={handleCopyAddress} className="px-4 py-2 border border-[#ECA118] text-[#ECA118] text-[13px] font-bold rounded-lg hover:bg-[#ECA118]/10 transition-colors flex items-center gap-2 whitespace-nowrap">
+                <button type="button" onClick={handleCopyAddress} className="px-4 py-2 border border-[#F26522] text-[#F26522] text-[13px] font-bold rounded-lg hover:bg-[#F26522]/10 transition-colors flex items-center gap-2 whitespace-nowrap">
                   📍 Copiar Endereço do Proponente 1
                 </button>
               </div>
@@ -330,7 +330,7 @@ export default function ClientForm() {
               </div>
 
               <div>
-                <h3 className="text-xs font-bold text-white uppercase tracking-widest border-b border-[#3D342E] pb-2 mb-6">Endereço Residencial do Proponente 2:</h3>
+                <h3 className="text-xs font-bold text-white uppercase tracking-widest border-b border-[#334155] pb-2 mb-6">Endereço Residencial do Proponente 2:</h3>
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-5 mb-8">
                   <Input label="Rua / Logradouro *" className="md:col-span-2" name="p2.street" register={register} errors={errors} />
                   <Input label="Número *" name="p2.number" register={register} errors={errors} />
@@ -352,12 +352,12 @@ export default function ClientForm() {
              {/* ================= STEP 4 ================= */}
             <div className={currentStep === 4 ? 'block space-y-12 animate-in fade-in slide-in-from-right-4' : 'hidden'}>
                <div>
-                 <div className="mb-6 border-b border-[#3D342E] pb-4">
+                 <div className="mb-6 border-b border-[#334155] pb-4">
                    <h2 className="text-lg font-bold text-white tracking-tight">Histórico de FGTS e outros Bens</h2>
-                   <p className="text-[13px] text-blue-200/60 mt-1">Dados relativos à sua situação patrimonial e elegibilidade de subsídios habitacionais.</p>
+                   <p className="text-[13px] text-slate-400 mt-1">Dados relativos à sua situação patrimonial e elegibilidade de subsídios habitacionais.</p>
                  </div>
                  
-                 <div className="bg-[#1A1613] border border-[#3D342E] rounded-xl px-6 py-2 mb-8">
+                 <div className="bg-[#111827] border border-[#334155] rounded-xl px-6 py-2 mb-8">
                     <SimNaoButtons 
                       label="Já utilizou recursos do FGTS para aquisição de imóvel?" 
                       sublabel="Em qualquer localidade do território nacional" 
@@ -384,9 +384,9 @@ export default function ClientForm() {
             {/* ================= STEP 5 ================= */}
             <div className={currentStep === 5 ? 'block space-y-12 animate-in fade-in slide-in-from-right-4' : 'hidden'}>
               <div>
-                <div className="mb-6 border-b border-[#3D342E] pb-4">
+                <div className="mb-6 border-b border-[#334155] pb-4">
                    <h2 className="text-lg font-bold text-white tracking-tight">Dados do Imóvel Pretendido e Operação Financeira</h2>
-                   <p className="text-[13px] text-blue-200/60 mt-1">Configuração monetária exata da sua proposta de aquisição, prazos e modalidade de cálculo amortizável.</p>
+                   <p className="text-[13px] text-slate-400 mt-1">Configuração monetária exata da sua proposta de aquisição, prazos e modalidade de cálculo amortizável.</p>
                  </div>
                  
                  <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
@@ -398,14 +398,14 @@ export default function ClientForm() {
                    <Select label="Sistema de Amortização *" name="amortizationSystem" register={register} errors={errors} options={[{label:'SAC (Prestações Decrescentes)', value:'sac'}, {label:'Price (Prestações Fixas)', value:'price'}]} required />
                  </div>
 
-                 <div className="border border-[#3D342E] bg-[#1A1613] p-6 rounded-xl flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
+                 <div className="border border-[#334155] bg-[#111827] p-6 rounded-xl flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
                    <div className="flex items-start gap-4">
                       <div className="mt-1">
-                        <input type="checkbox" {...register('useFgts')} value="sim" className="w-5 h-5 text-[#ECA118] bg-[#12100E] border-[#3D342E] rounded focus:ring-[0]" />
+                        <input type="checkbox" {...register('useFgts')} value="sim" className="w-5 h-5 text-[#F26522] bg-[#020617] border-[#334155] rounded focus:ring-[0]" />
                       </div>
                       <div>
                          <h3 className="text-[15px] font-bold text-white tracking-wide">Deseja abater ou utilizar saldo de FGTS na operação?</h3>
-                         <p className="text-[13px] text-blue-200/50 mt-1">Você pode resgatar saldos de contas ativas e inativas.</p>
+                         <p className="text-[13px] text-slate-400 mt-1">Você pode resgatar saldos de contas ativas e inativas.</p>
                       </div>
                    </div>
                    <div className="w-full md:w-64">
@@ -418,19 +418,19 @@ export default function ClientForm() {
                     <Input label="Prazo Financiamento (Anos) *" name="termYears" type="number" register={register} errors={errors} required />
                  </div>
 
-                 <div className="border border-[#3D342E] bg-[#1A1613] p-6 rounded-xl flex items-start gap-4 mb-8">
+                 <div className="border border-[#334155] bg-[#111827] p-6 rounded-xl flex items-start gap-4 mb-8">
                     <span className="text-white/40 mt-0.5 border border-white/20 rounded-full w-5 h-5 flex items-center justify-center shrink-0 text-xs">i</span>
                     <p className="text-[13px] text-white/60 font-medium">* Lembre-se que o limite máximo de financiamento imobiliário no Brasil costuma ser de <strong className="text-white">80% do valor avaliado</strong> do imóvel.</p>
                  </div>
 
-                 <div className="bg-[#2D3B73] rounded-xl p-6 text-white text-sm">
+                 <div className="bg-[#005C97] rounded-xl p-6 text-white text-sm">
                    <h3 className="font-bold text-lg mb-4">DECLARAÇÕES E TERMOS DO CANDIDATO</h3>
                    <div className="flex items-start gap-3">
                      <input
                         id="acceptedTerms"
                         type="checkbox"
                         {...register('acceptedTerms', { required: 'Você deve aceitar os termos para prosseguir' })}
-                        className="w-5 h-5 mt-0.5 text-[#ECA118] rounded bg-white/10 border-white/20 focus:ring-0"
+                        className="w-5 h-5 mt-0.5 text-[#F26522] rounded bg-white/10 border-white/20 focus:ring-0"
                       />
                       <div>
                         <label htmlFor="acceptedTerms" className="font-medium cursor-pointer">Declaro que as informações acima prestadas são verdadeiras e exatas.</label>
@@ -443,12 +443,12 @@ export default function ClientForm() {
             </div>
 
             {/* Navigation Buttons footer */}
-            <hr className="border-[#3D342E] my-8" />
+            <hr className="border-[#334155] my-8" />
             <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
               <button
                 type="button"
                 onClick={prevStep}
-                className={`px-8 py-3.5 bg-white/5 border border-[#3D342E] text-white/70 font-bold rounded-lg text-[13px] hover:bg-white/10 hover:text-white transition-colors focus:outline-none w-full sm:w-auto flex items-center justify-center gap-2 ${currentStep === 1 ? 'opacity-0 pointer-events-none' : ''}`}
+                className={`px-8 py-3.5 bg-white/5 border border-[#334155] text-white/70 font-bold rounded-lg text-[13px] hover:bg-white/10 hover:text-white transition-colors focus:outline-none w-full sm:w-auto flex items-center justify-center gap-2 ${currentStep === 1 ? 'opacity-0 pointer-events-none' : ''}`}
               >
                 &lt; Anterior
               </button>
@@ -457,14 +457,14 @@ export default function ClientForm() {
                 <button
                   type="button"
                   onClick={nextStep}
-                  className="px-10 py-3.5 bg-[#ECA118] text-[#422006] font-bold rounded-lg text-[14px] shadow-[0_0_20px_rgba(236,161,24,0.15)] hover:bg-[#F2B035] transition-colors focus:outline-none flex items-center justify-center gap-2 w-full sm:w-auto"
+                  className="px-10 py-3.5 bg-[#F26522] text-[#FFFFFF] font-bold rounded-lg text-[14px] shadow-[0_0_20px_rgba(242,101,34,0.15)] hover:bg-[#F47920] transition-colors focus:outline-none flex items-center justify-center gap-2 w-full sm:w-auto"
                 >
                   Próximo Passo &gt;
                 </button>
               ) : (
                 <button
                   type="submit"
-                  className="px-10 py-3.5 bg-[#2D3B73] text-white font-bold rounded-lg text-[14px] shadow-[0_0_20px_rgba(45,59,115,0.4)] hover:bg-[#394a8f] transition-colors focus:outline-none flex items-center justify-center gap-2 w-full sm:w-auto"
+                  className="px-10 py-3.5 bg-[#005C97] text-white font-bold rounded-lg text-[14px] shadow-[0_0_20px_rgba(0,92,151,0.4)] hover:bg-[#006EBB] transition-colors focus:outline-none flex items-center justify-center gap-2 w-full sm:w-auto"
                 >
                   Enviar Proposta de Financiamento ✓
                 </button>
