@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { FormData } from '../types';
 import { generatePDF } from '../lib/pdf';
+import { Layers, RotateCw, Users, BadgeDollarSign, Activity, TrendingUp, Search, Download, FileText, Trash2 } from 'lucide-react';
 
 export default function AdminDashboard() {
   const [submissions, setSubmissions] = useState<FormData[]>([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filter, setFilter] = useState('Todos');
 
   useEffect(() => {
     const data = JSON.parse(localStorage.getItem('fourcred_submissions') || '[]');
@@ -23,106 +26,215 @@ export default function AdminDashboard() {
     }
   };
 
+  const filteredSubmissions = submissions.filter(sub => {
+    if (filter !== 'Todos') {
+       // Mocking the filter logic as we don't have "status" property in the form yet.
+       // We'll just show them all in this MVP.
+    }
+    if (searchTerm) {
+      return (
+        sub.p1.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        sub.p1.cpf.includes(searchTerm) ||
+        sub.id.includes(searchTerm)
+      );
+    }
+    return true;
+  });
+
   const totalVolume = submissions.reduce((acc, sub) => acc + Number(sub.financingValue || 0), 0);
   const avgTicket = submissions.length > 0 ? (totalVolume / submissions.length) : 0;
+  
+  const sacCount = submissions.filter(s => s.amortizationSystem === 'sac').length;
+  const priceCount = submissions.filter(s => s.amortizationSystem === 'price').length;
+  const indexAmortization = sacCount >= priceCount ? 'SAC' : 'PRICE';
 
   return (
-    <div className="p-6 bg-[#12100E] min-h-full">
+    <div className="pb-12 px-4 sm:px-6 lg:px-8 bg-[#12100E] min-h-full flex-1">
       <div className="max-w-6xl mx-auto space-y-6">
         
-        <div className="flex justify-between items-center bg-[#1A1613] p-6 rounded-2xl shadow-sm border border-[#3D342E]">
+        {/* Header Hero Section */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center bg-gradient-to-r from-[#211C18] to-[#1A1613] p-8 rounded-2xl shadow-xl border border-[#3D342E]">
           <div>
-            <h1 className="text-2xl font-light text-white tracking-tight">Painel do <span className="text-amber-500 font-bold">Gestor</span></h1>
-            <p className="text-sm text-amber-100/40 uppercase tracking-widest mt-1">Visão geral e fichas cadastrais</p>
+            <div className="flex items-center gap-2 mb-3">
+              <span className="bg-amber-600 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest shadow-[0_0_10px_rgba(217,119,6,0.3)]">Mesa de Crédito — Área de Gestão</span>
+            </div>
+            <h1 className="text-3xl font-bold text-white tracking-tight">Estúdio Fourcred de Operações</h1>
+            <p className="text-sm text-blue-200/60 mt-2">Controle de inscrições digitais e conversão em ficha física regulatória.</p>
           </div>
           <button 
-            onClick={clearData}
-            className="px-4 py-2 text-[10px] uppercase tracking-wider font-bold text-red-400 hover:bg-red-500/10 rounded-lg border border-red-500/30 transition-colors"
+            onClick={() => window.location.reload()}
+            className="mt-6 md:mt-0 flex items-center gap-2 px-5 py-2.5 text-xs uppercase tracking-wider font-bold text-white hover:bg-white/10 rounded-lg border border-[#3D342E] transition-colors bg-[#12100E]"
           >
-            Limpar Base
+            <RotateCw className="w-4 h-4" />
+            Atualizar Inscrições
           </button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+        {/* Metrics Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           
-          {/* Stats Box 1 */}
-          <div className="col-span-1 md:col-span-4 bg-[#1A1613] border border-[#3D342E] rounded-2xl p-5 flex flex-col justify-between min-h-[140px]">
-            <span className="text-xs text-amber-500/70 uppercase tracking-widest font-semibold">Total de Fichas</span>
-            <div className="flex items-end justify-between mt-auto">
-              <h2 className="text-5xl font-light text-white">{submissions.length}</h2>
-              <div className="text-emerald-500 text-xs mb-1 font-mono">Cadastros Recebidos</div>
+          <div className="bg-[#1A1613] border border-[#3D342E] rounded-2xl p-6 flex flex-col justify-between shadow-lg relative overflow-hidden group hover:border-[#d97706]/50 transition-colors">
+            <div className="flex justify-between items-start mb-4">
+               <span className="text-[11px] text-white/50 uppercase tracking-widest font-bold">Inscrições Totais</span>
+               <div className="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center text-white/50 border border-[#3D342E]">
+                  <Users className="w-5 h-5" />
+               </div>
             </div>
-            <div className="h-1 w-full bg-[#2A2420] rounded-full overflow-hidden mt-4">
-              <div className="h-full bg-amber-600" style={{ width: submissions.length > 0 ? '100%' : '0%' }}></div>
+            <div>
+               <h2 className="text-4xl font-bold text-white">{submissions.length}</h2>
+               <p className="text-[11px] text-amber-500 font-medium mt-2">{submissions.length > 0 ? '1 aguardando revisão' : 'Sem movimento'}</p>
             </div>
           </div>
 
-          {/* Stats Box 2 */}
-          <div className="col-span-1 md:col-span-8 bg-[#1A1613] border border-[#3D342E] rounded-2xl p-5 flex flex-col justify-between">
-            <span className="text-xs text-amber-500/70 uppercase tracking-widest font-semibold">Volume Financiado Solicitado</span>
-            <div className="flex items-end justify-between mt-auto">
-              <h2 className="text-4xl font-light text-white italic truncate">
-                <span className="text-xl align-top mr-1">R$</span>
-                {totalVolume.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
-              </h2>
+          <div className="bg-[#1A1613] border border-[#3D342E] rounded-2xl p-6 flex flex-col justify-between shadow-lg relative overflow-hidden group hover:border-[#d97706]/50 transition-colors">
+            <div className="flex justify-between items-start mb-4">
+               <span className="text-[11px] text-white/50 uppercase tracking-widest font-bold">Volume Total Financiado</span>
+               <div className="w-10 h-10 bg-emerald-500/10 rounded-xl flex items-center justify-center text-emerald-500 border border-emerald-500/20">
+                  <BadgeDollarSign className="w-5 h-5" />
+               </div>
             </div>
-            <p className="text-[10px] text-amber-100/40 mt-4 uppercase tracking-widest">Ticket médio: R$ {avgTicket.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
+            <div>
+               <h2 className="text-4xl font-bold text-white tracking-tight">
+                  <span className="text-xl align-top mr-1 font-medium text-white/40">R$</span>
+                  {totalVolume.toLocaleString('pt-BR')}
+               </h2>
+               <p className="text-[11px] text-emerald-500 font-medium mt-2">Propostas ativas na carteira</p>
+            </div>
           </div>
 
-          {/* Table */}
-          <div className="col-span-1 md:col-span-12 bg-[#1A1613] border border-[#3D342E] rounded-2xl overflow-hidden flex flex-col">
-            <div className="p-5 border-b border-[#3D342E] flex justify-between items-center bg-[#211C18]">
-              <h3 className="text-sm font-semibold tracking-wide text-white uppercase">Recentes Recebidos</h3>
+          <div className="bg-[#1A1613] border border-[#3D342E] rounded-2xl p-6 flex flex-col justify-between shadow-lg relative overflow-hidden group hover:border-[#d97706]/50 transition-colors">
+            <div className="flex justify-between items-start mb-4">
+               <span className="text-[11px] text-white/50 uppercase tracking-widest font-bold">Média por Contrato</span>
+               <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-amber-600 shadow-[0_0_15px_rgba(255,255,255,0.2)]">
+                  <TrendingUp className="w-5 h-5" />
+               </div>
             </div>
-            <div className="flex-1 overflow-x-auto">
-              {submissions.length === 0 ? (
-                <div className="p-12 text-center text-amber-100/40 text-sm">
-                  Nenhuma ficha cadastral recebida ainda.
-                </div>
-              ) : (
-                <table className="w-full text-left text-xs text-white">
-                  <thead>
-                    <tr className="text-amber-500/50 uppercase tracking-tighter border-b border-[#3D342E]">
-                      <th className="px-5 py-3 font-normal whitespace-nowrap">Data</th>
-                      <th className="px-5 py-3 font-normal whitespace-nowrap">Proponente Principal</th>
-                      <th className="px-5 py-3 font-normal whitespace-nowrap">CPF</th>
-                      <th className="px-5 py-3 font-normal whitespace-nowrap">Imóvel Pretendido (Venda)</th>
-                      <th className="px-5 py-3 font-normal whitespace-nowrap text-right">Ações</th>
+            <div>
+               <h2 className="text-4xl font-bold text-white tracking-tight">
+                  <span className="text-xl align-top mr-1 font-medium text-white/40">R$</span>
+                  {Math.round(avgTicket).toLocaleString('pt-BR')}
+               </h2>
+               <p className="text-[11px] text-white/40 font-medium mt-2">Ticket médio da praça</p>
+            </div>
+          </div>
+
+          <div className="bg-[#1A1613] border border-[#3D342E] rounded-2xl p-6 flex flex-col justify-between shadow-lg relative overflow-hidden group hover:border-[#d97706]/50 transition-colors">
+            <div className="flex justify-between items-start mb-4">
+               <span className="text-[11px] text-white/50 uppercase tracking-widest font-bold">Índice Amortização</span>
+               <div className="w-10 h-10 bg-orange-100 rounded-xl flex items-center justify-center text-amber-600">
+                  <Layers className="w-5 h-5" />
+               </div>
+            </div>
+            <div>
+               <h2 className="text-4xl font-bold text-white">{indexAmortization}</h2>
+               <p className="text-[11px] text-white/40 font-medium mt-2">{sacCount} SAC vs {priceCount} Price</p>
+            </div>
+          </div>
+
+        </div>
+
+        {/* Data Table Section */}
+        <div className="bg-[#1A1613] border border-[#3D342E] rounded-2xl overflow-hidden shadow-xl flex flex-col">
+          
+          <div className="p-6 border-b border-[#3D342E] flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-[#211C18]">
+            <div className="flex-1 w-full relative">
+              <Search className="w-4 h-4 text-white/40 absolute left-4 top-1/2 -translate-y-1/2" />
+              <input 
+                type="text" 
+                placeholder="Pesquisar por cliente, CPF..." 
+                value={searchTerm}
+                onChange={e => setSearchTerm(e.target.value)}
+                className="w-full bg-[#12100E] border border-[#3D342E] rounded-lg py-2.5 pl-11 pr-4 text-sm text-white focus:outline-none focus:border-amber-500 placeholder:text-white/30"
+              />
+            </div>
+            <div className="flex items-center gap-2 overflow-x-auto w-full md:w-auto pb-2 md:pb-0 hide-scrollbar">
+              {['Todos', 'Pendente', 'Em Análise', 'Aprovado', 'Recusado'].map(f => (
+                <button 
+                  key={f}
+                  onClick={() => setFilter(f)}
+                  className={`whitespace-nowrap px-4 py-2 rounded-lg text-xs font-bold transition-colors ${filter === f ? 'bg-amber-600 text-white' : 'bg-white text-[#12100E] hover:bg-white/90'}`}
+                >
+                  {f}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex-1 overflow-x-auto">
+            {filteredSubmissions.length === 0 ? (
+              <div className="p-16 text-center text-white/40 text-sm flex flex-col items-center">
+                <FileText className="w-12 h-12 mb-4 opacity-20" />
+                Nenhuma ficha cadastral encontrada.
+              </div>
+            ) : (
+              <table className="w-full text-left text-sm text-white">
+                <thead>
+                  <tr className="text-[10px] text-white/40 uppercase tracking-widest font-bold border-b border-[#3D342E] bg-[#161311]">
+                    <th className="px-6 py-4 whitespace-nowrap">ID / Envio</th>
+                    <th className="px-6 py-4 whitespace-nowrap">Titular Principal</th>
+                    <th className="px-6 py-4 whitespace-nowrap">Coonjuge (P2)?</th>
+                    <th className="px-6 py-4 whitespace-nowrap">Imóvel Valor</th>
+                    <th className="px-6 py-4 whitespace-nowrap">Financiado</th>
+                    <th className="px-6 py-4 whitespace-nowrap">Status</th>
+                    <th className="px-6 py-4 whitespace-nowrap text-right">Ações</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-[#3D342E]">
+                  {filteredSubmissions.map((sub, idx) => (
+                    <tr key={sub.id} className="hover:bg-white/5 cursor-pointer bg-transparent transition-colors group">
+                      <td className="px-6 py-5 whitespace-nowrap">
+                        <div className="font-bold text-white text-xs">#{sub.id}</div>
+                        <div className="text-[10px] opacity-40 mt-1">
+                          {new Date(sub.submittedAt).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                        </div>
+                      </td>
+                      <td className="px-6 py-5 whitespace-nowrap">
+                        <div className="font-bold text-white">{sub.p1.fullName}</div>
+                        <div className="text-xs text-white/40 font-mono mt-1">{sub.p1.cpf}</div>
+                      </td>
+                      <td className="px-6 py-5 whitespace-nowrap text-[#12100E]">
+                        <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${sub.hasP2 ? 'bg-white' : 'bg-[#2A2420] text-white/50'}`}>
+                          {sub.hasP2 ? 'Sim (Cônjuge)' : 'Não'}
+                        </span>
+                      </td>
+                      <td className="px-6 py-5 whitespace-nowrap font-bold text-white">
+                        R$ {Number(sub.saleValue).toLocaleString('pt-BR')}
+                      </td>
+                      <td className="px-6 py-5 whitespace-nowrap">
+                        <div className="font-bold text-amber-500">R$ {Number(sub.financingValue).toLocaleString('pt-BR')}</div>
+                        <div className="text-[10px] text-white/40 uppercase tracking-widest mt-1">{sub.termYears} anos • {sub.amortizationSystem}</div>
+                      </td>
+                      <td className="px-6 py-5 whitespace-nowrap">
+                         <div className="flex items-center gap-2 bg-[#12100E] border border-[#3D342E] px-3 py-1.5 rounded-lg w-max">
+                            <span className="w-2 h-2 rounded-full bg-amber-500"></span>
+                            <span className="text-xs font-bold">Em Análise</span>
+                         </div>
+                      </td>
+                      <td className="px-6 py-5 text-right whitespace-nowrap">
+                        <div className="flex items-center justify-end gap-2">
+                           <button className="flex items-center gap-1.5 px-3 py-1.5 border border-amber-600 text-amber-500 hover:bg-amber-600 hover:text-white rounded-md text-[10px] uppercase font-bold tracking-wider transition-colors">
+                              Detalhes
+                           </button>
+                           <button
+                             onClick={(e) => { e.stopPropagation(); handleDownload(sub); }}
+                             className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-600 text-white rounded-md text-[10px] uppercase font-bold tracking-wider hover:bg-amber-700 transition-colors shadow-lg shadow-amber-600/20"
+                           >
+                             <Download className="w-3 h-3" />
+                             PDF
+                           </button>
+                           <button
+                             onClick={(e) => { e.stopPropagation(); clearData() }}
+                             className="w-8 h-8 flex items-center justify-center border border-[#3D342E] hover:bg-red-500/10 hover:border-red-500/50 hover:text-red-400 rounded-md text-white/40 transition-colors"
+                           >
+                             <Trash2 className="w-4 h-4" />
+                           </button>
+                        </div>
+                      </td>
                     </tr>
-                  </thead>
-                  <tbody className="divide-y divide-[#3D342E]">
-                    {submissions.map((sub) => (
-                      <tr key={sub.id} className="hover:bg-white/5 cursor-pointer bg-white/[0.02]">
-                        <td className="px-5 py-4 whitespace-nowrap">
-                          <div className="text-[10px] opacity-40 italic">
-                            {new Date(sub.submittedAt).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
-                          </div>
-                        </td>
-                        <td className="px-5 py-4 whitespace-nowrap">
-                          <div className="font-medium text-white">{sub.p1.fullName}</div>
-                          <div className="text-[10px] opacity-40 italic">{sub.hasP2 ? 'Com 2º Proponente' : 'Apenas 1 Proponente'}</div>
-                        </td>
-                        <td className="px-5 py-4 whitespace-nowrap font-mono text-amber-100/70">
-                          {sub.p1.cpf}
-                        </td>
-                        <td className="px-5 py-4 whitespace-nowrap">
-                          <div className="font-mono text-white">R$ {Number(sub.saleValue).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</div>
-                          <div className="text-[9px] uppercase tracking-wider text-amber-500/50">{sub.amortizationSystem} / {sub.termYears} Anos</div>
-                        </td>
-                        <td className="px-5 py-4 text-right whitespace-nowrap">
-                          <button
-                            onClick={() => handleDownload(sub)}
-                            className="text-amber-500 underline decoration-amber-500/30 text-[10px] uppercase tracking-wider font-bold hover:text-amber-400 transition-colors"
-                          >
-                            Baixar PDF
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              )}
-            </div>
+                  ))}
+                </tbody>
+              </table>
+            )}
           </div>
         </div>
 

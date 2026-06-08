@@ -15,13 +15,25 @@ export interface Proponent {
   phoneMobile: string;
   phoneMessage?: string;
   educationLevel: string;
+  
+  // Residence
   residenceType: string;
   residenceTime: string;
-  residenceAddress: string;
+  residenceAddress?: string; // mapping to street
+  street?: string;
+  number?: string;
+  complement?: string;
+  neighborhood?: string;
+  city?: string;
+  state?: string;
+  zipCode?: string;
+
   hasFinancing: string;
   financingInstallment?: number;
   hasLoan: string;
   loanInstallment?: number;
+  
+  // Profession
   profession: string;
   company: string;
   isOwner: string;
