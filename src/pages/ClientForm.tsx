@@ -172,15 +172,15 @@ export default function ClientForm() {
             const isFutureDisabled = currentStep < step.num;
 
             return (
-              <div key={step.num} className={`flex items-center gap-3 min-w-max py-4 h-full relative transition-all ${isActive ? 'opacity-100' : 'opacity-40'} ${step.num === 3 && !hasP2 ? 'opacity-10' : ''}`}>
-                <div className={`w-8 h-8 rounded-lg text-sm font-bold flex items-center justify-center shrink-0 transition-colors ${isActive ? 'bg-[#F26522] text-[#FFFFFF]' : isPast ? 'bg-[#334155] text-[#F26522]' : 'bg-[#020617] border border-[#334155] text-white/40'}`}>
+              <div key={step.num} className={`flex items-center gap-3 min-w-max py-4 h-full relative transition-all ${isActive ? 'opacity-100' : 'opacity-50'} ${step.num === 3 && !hasP2 ? 'opacity-20' : ''}`}>
+                <div className={`w-8 h-8 rounded-full text-sm font-bold flex items-center justify-center shrink-0 transition-colors shadow-sm ${isActive ? 'bg-[#FF6B1A] text-white shadow-[#FF6B1A]/30' : isPast ? 'bg-[#1E293B] border border-[#FF6B1A] text-[#FF6B1A]' : 'bg-[#0F172A] border border-[#334155] text-[#CBD5E1]/50'}`}>
                   {isPast ? '✓' : step.num}
                 </div>
                 <div className="flex flex-col justify-center">
-                  <div className={`text-[13px] font-bold ${isActive || isPast ? 'text-[#F26522]' : 'text-white/60'}`}>{step.title}</div>
-                  <div className="text-white/40 text-[11px] font-medium leading-none mt-1">{step.subtitle}</div>
+                  <div className={`text-[13px] font-bold ${isActive || isPast ? 'text-white' : 'text-[#CBD5E1]/70'}`}>{step.title}</div>
+                  <div className="text-[#CBD5E1]/50 text-[11px] font-medium leading-none mt-1">{step.subtitle}</div>
                 </div>
-                {isActive && <div className="absolute bottom-0 left-0 right-0 h-1 bg-[#F26522] rounded-t-sm shadow-[0_0_10px_rgba(242,101,34,0.3)]" />}
+                {isActive && <div className="absolute bottom-0 left-0 right-0 h-1 bg-[#FF6B1A] rounded-t-sm shadow-[0_0_12px_rgba(255,107,26,0.5)]" />}
               </div>
             );
           })}
@@ -194,10 +194,10 @@ export default function ClientForm() {
               <div>
                 <div className="mb-6 border-b border-[#334155] pb-4">
                   <div className="flex items-center justify-between mb-1">
-                    <h2 className="text-lg font-bold text-white tracking-tight">Identificação do Primeiro Proponente</h2>
-                    <button type="button" onClick={fillMockData} className="text-[#F26522] text-xs font-bold hover:underline">✨ Preencher Rápido</button>
+                    <h2 className="text-xl font-bold text-white tracking-tight">Identificação do Primeiro Proponente</h2>
+                    <button type="button" onClick={fillMockData} className="text-[#FF6B1A] text-xs font-bold hover:text-[#E85D04] transition-colors flex items-center gap-1">✨ Preencher Rápido</button>
                   </div>
-                  <p className="text-[13px] text-slate-400">Insira abaixo os dados básicos de identidade do proponente titular da operação.</p>
+                  <p className="text-[13px] text-[#CBD5E1]">Insira abaixo os dados básicos de identidade do proponente titular da operação.</p>
                 </div>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-8">
@@ -259,9 +259,9 @@ export default function ClientForm() {
                   <Input label="Cargo Atual *" name="p1.currentRole" register={register} errors={errors} required />
                   
                   <div className="flex items-center mt-6">
-                    <label className="flex items-center space-x-3 cursor-pointer">
-                      <input type="checkbox" {...register('p1.isOwner')} value="sim" className="w-5 h-5 text-[#F26522] bg-[#020617] border-[#334155] rounded focus:ring-[0]" />
-                      <span className="text-sm font-medium text-[#94A3B8]">Sou proprietário / sócio desta empresa</span>
+                    <label className="flex items-center space-x-3 cursor-pointer group">
+                      <input type="checkbox" {...register('p1.isOwner')} value="sim" className="w-5 h-5 text-[#FF6B1A] bg-[#0F172A] border-[#334155] rounded-md focus:ring-2 focus:ring-[#FF6B1A]/20 transition-colors" />
+                      <span className="text-sm font-semibold text-[#CBD5E1] group-hover:text-white transition-colors">Sou proprietário / sócio desta empresa</span>
                     </label>
                   </div>
 
@@ -275,18 +275,18 @@ export default function ClientForm() {
                   <Input label="Origem / Comprovação de Outras Rendas" name="p1.otherIncomesOrigin" register={register} errors={errors} />
                 </div>
                 
-                <div className="mt-12 border border-[#F26522]/20 bg-[#111827] p-6 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="mt-12 border border-[#334155] bg-[#0F172A] p-6 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm">
                   <div className="flex items-start gap-4">
-                     <div className="mt-1 text-[#F26522] text-xl">👥</div>
+                     <div className="mt-1 text-[#FF6B1A] text-xl">👥</div>
                      <div>
                         <h3 className="text-[15px] font-bold text-white tracking-wide">Adicionar Cônjuge ou Segundo Proponente?</h3>
-                        <p className="text-[13px] text-slate-400 mt-1">Somar rendas de dois proponentes aumenta significativamente a margem de aprovação.</p>
+                        <p className="text-[13px] text-[#CBD5E1] mt-1">Somar rendas de dois proponentes aumenta significativamente a margem de aprovação.</p>
                      </div>
                   </div>
                   <label className="relative inline-flex items-center cursor-pointer shrink-0">
                     <input type="checkbox" {...register('hasP2')} className="sr-only peer" />
-                    <div className="w-14 h-7 bg-[#1E293B] border border-[#334155] rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-[#020617] after:border-gray-500 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-[#F26522]"></div>
-                    <span className="ml-3 text-[13px] font-bold text-white/50 uppercase tracking-wider w-8">{hasP2 ? 'SIM' : 'NÃO'}</span>
+                    <div className="w-14 h-7 bg-[#1E293B] border border-[#334155] rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-[#0F172A] after:border-gray-500 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-[#FF6B1A]"></div>
+                    <span className="ml-3 text-[13px] font-bold text-[#CBD5E1] uppercase tracking-wider w-8">{hasP2 ? 'SIM' : 'NÃO'}</span>
                   </label>
                 </div>
               </div>
@@ -294,14 +294,14 @@ export default function ClientForm() {
 
             {/* ================= STEP 3 ================= */}
             <div className={currentStep === 3 ? 'block space-y-12 animate-in fade-in slide-in-from-right-4' : 'hidden'}>
-              <div className="border border-[#F26522]/20 bg-[#F26522]/5 rounded-lg p-5 mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div className="border border-[#334155] bg-[#0F172A] shadow-sm rounded-xl p-5 mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
                   <h3 className="text-[15px] font-bold text-white flex items-center gap-2">
-                    <span className="text-[#F26522]">👥</span> Segundo Proponente Coparticipante
+                    <span className="text-[#FF6B1A]">👥</span> Segundo Proponente Coparticipante
                   </h3>
-                  <p className="text-[13px] text-slate-400 mt-1">Insira as informações do parceiro que agregará recursos ao pleito.</p>
+                  <p className="text-[13px] text-[#CBD5E1] mt-1">Insira as informações do parceiro que agregará recursos ao pleito.</p>
                 </div>
-                <button type="button" onClick={handleCopyAddress} className="px-4 py-2 border border-[#F26522] text-[#F26522] text-[13px] font-bold rounded-lg hover:bg-[#F26522]/10 transition-colors flex items-center gap-2 whitespace-nowrap">
+                <button type="button" onClick={handleCopyAddress} className="px-5 py-2.5 bg-[#1E293B] border border-[#334155] text-white text-[13px] font-bold rounded-lg hover:bg-[#334155] transition-colors flex items-center gap-2 whitespace-nowrap shadow-sm">
                   📍 Copiar Endereço do Proponente 1
                 </button>
               </div>
@@ -357,7 +357,7 @@ export default function ClientForm() {
                    <p className="text-[13px] text-slate-400 mt-1">Dados relativos à sua situação patrimonial e elegibilidade de subsídios habitacionais.</p>
                  </div>
                  
-                 <div className="bg-[#111827] border border-[#334155] rounded-xl px-6 py-2 mb-8">
+                 <div className="bg-[#0F172A] border border-[#334155] rounded-xl px-6 py-2 mb-8 shadow-sm">
                     <SimNaoButtons 
                       label="Já utilizou recursos do FGTS para aquisição de imóvel?" 
                       sublabel="Em qualquer localidade do território nacional" 
@@ -398,14 +398,14 @@ export default function ClientForm() {
                    <Select label="Sistema de Amortização *" name="amortizationSystem" register={register} errors={errors} options={[{label:'SAC (Prestações Decrescentes)', value:'sac'}, {label:'Price (Prestações Fixas)', value:'price'}]} required />
                  </div>
 
-                 <div className="border border-[#334155] bg-[#111827] p-6 rounded-xl flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
+                 <div className="border border-[#334155] bg-[#0F172A] p-6 rounded-xl flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8 shadow-sm">
                    <div className="flex items-start gap-4">
                       <div className="mt-1">
-                        <input type="checkbox" {...register('useFgts')} value="sim" className="w-5 h-5 text-[#F26522] bg-[#020617] border-[#334155] rounded focus:ring-[0]" />
+                        <input type="checkbox" {...register('useFgts')} value="sim" className="w-5 h-5 text-[#FF6B1A] bg-[#1E293B] border-[#334155] rounded-md focus:ring-[#FF6B1A]/20 transition-colors" />
                       </div>
                       <div>
                          <h3 className="text-[15px] font-bold text-white tracking-wide">Deseja abater ou utilizar saldo de FGTS na operação?</h3>
-                         <p className="text-[13px] text-slate-400 mt-1">Você pode resgatar saldos de contas ativas e inativas.</p>
+                         <p className="text-[13px] text-[#CBD5E1] mt-1">Você pode resgatar saldos de contas ativas e inativas.</p>
                       </div>
                    </div>
                    <div className="w-full md:w-64">
@@ -418,24 +418,25 @@ export default function ClientForm() {
                     <Input label="Prazo Financiamento (Anos) *" name="termYears" type="number" register={register} errors={errors} required />
                  </div>
 
-                 <div className="border border-[#334155] bg-[#111827] p-6 rounded-xl flex items-start gap-4 mb-8">
-                    <span className="text-white/40 mt-0.5 border border-white/20 rounded-full w-5 h-5 flex items-center justify-center shrink-0 text-xs">i</span>
-                    <p className="text-[13px] text-white/60 font-medium">* Lembre-se que o limite máximo de financiamento imobiliário no Brasil costuma ser de <strong className="text-white">80% do valor avaliado</strong> do imóvel.</p>
+                 <div className="border border-[#334155] bg-[#0F172A] p-6 rounded-xl flex items-start gap-4 mb-8 shadow-sm">
+                    <span className="text-[#CBD5E1] mt-0.5 border border-[#334155] rounded-full w-6 h-6 flex items-center justify-center shrink-0 text-sm font-bold bg-[#1E293B]">i</span>
+                    <p className="text-[13px] text-[#CBD5E1] font-medium leading-relaxed">* Lembre-se que o limite máximo de financiamento imobiliário no Brasil costuma ser de <strong className="text-white">80% do valor avaliado</strong> do imóvel.</p>
                  </div>
 
-                 <div className="bg-[#005C97] rounded-xl p-6 text-white text-sm">
-                   <h3 className="font-bold text-lg mb-4">DECLARAÇÕES E TERMOS DO CANDIDATO</h3>
-                   <div className="flex items-start gap-3">
+                 <div className="bg-[#0F172A] border border-[#FF6B1A]/50 rounded-xl p-6 text-white text-sm shadow-sm relative overflow-hidden">
+                   <div className="absolute top-0 left-0 w-1.5 h-full bg-[#FF6B1A]"></div>
+                   <h3 className="font-bold text-lg mb-4 ml-2">DECLARAÇÕES E TERMOS DO CANDIDATO</h3>
+                   <div className="flex items-start gap-4 ml-2">
                      <input
                         id="acceptedTerms"
                         type="checkbox"
                         {...register('acceptedTerms', { required: 'Você deve aceitar os termos para prosseguir' })}
-                        className="w-5 h-5 mt-0.5 text-[#F26522] rounded bg-white/10 border-white/20 focus:ring-0"
+                        className="w-5 h-5 mt-0.5 text-[#FF6B1A] rounded-md bg-[#1E293B] border-[#334155] focus:ring-2 focus:ring-[#FF6B1A]/20 transition-colors cursor-pointer"
                       />
                       <div>
-                        <label htmlFor="acceptedTerms" className="font-medium cursor-pointer">Declaro que as informações acima prestadas são verdadeiras e exatas.</label>
-                        <p className="text-white/70 mt-1 text-[13px]">Autorizo a Fourcred Soluções Imobiliárias a utilizar estes dados para fins de simulação e pré-aprovação de crédito junto a instituições financeiras, incluindo consultas a órgãos de proteção ao crédito (SPC, Serasa) e o envio de propostas.</p>
-                        {errors.acceptedTerms && <p className="text-red-300 mt-2 text-xs font-bold">{(errors.acceptedTerms as any).message}</p>}
+                        <label htmlFor="acceptedTerms" className="font-bold text-[14px] cursor-pointer block">Declaro que as informações acima prestadas são verdadeiras e exatas.</label>
+                        <p className="text-[#CBD5E1] mt-1.5 text-[13px] leading-relaxed">Autorizo a Fourcred Soluções Imobiliárias a utilizar estes dados para fins de simulação e pré-aprovação de crédito junto a instituições financeiras, incluindo consultas a órgãos de proteção ao crédito (SPC, Serasa) e o envio de propostas.</p>
+                        {errors.acceptedTerms && <p className="text-red-400 mt-2 text-xs font-bold">{(errors.acceptedTerms as any).message}</p>}
                       </div>
                    </div>
                  </div>
@@ -448,7 +449,7 @@ export default function ClientForm() {
               <button
                 type="button"
                 onClick={prevStep}
-                className={`px-8 py-3.5 bg-white/5 border border-[#334155] text-white/70 font-bold rounded-lg text-[13px] hover:bg-white/10 hover:text-white transition-colors focus:outline-none w-full sm:w-auto flex items-center justify-center gap-2 ${currentStep === 1 ? 'opacity-0 pointer-events-none' : ''}`}
+                className={`px-8 py-3.5 bg-[#0F172A] border border-[#334155] text-[#CBD5E1] font-bold rounded-xl text-[14px] hover:bg-[#334155] hover:text-white transition-all shadow-sm focus:outline-none w-full sm:w-auto flex items-center justify-center gap-2 ${currentStep === 1 ? 'opacity-0 pointer-events-none' : ''}`}
               >
                 &lt; Anterior
               </button>
@@ -457,14 +458,14 @@ export default function ClientForm() {
                 <button
                   type="button"
                   onClick={nextStep}
-                  className="px-10 py-3.5 bg-[#F26522] text-[#FFFFFF] font-bold rounded-lg text-[14px] shadow-[0_0_20px_rgba(242,101,34,0.15)] hover:bg-[#F47920] transition-colors focus:outline-none flex items-center justify-center gap-2 w-full sm:w-auto"
+                  className="px-10 py-3.5 bg-[#FF6B1A] text-white font-bold rounded-xl text-[14px] shadow-[0_4px_14px_rgba(255,107,26,0.3)] hover:bg-[#E85D04] transition-all focus:outline-none flex items-center justify-center gap-2 w-full sm:w-auto"
                 >
                   Próximo Passo &gt;
                 </button>
               ) : (
                 <button
                   type="submit"
-                  className="px-10 py-3.5 bg-[#005C97] text-white font-bold rounded-lg text-[14px] shadow-[0_0_20px_rgba(0,92,151,0.4)] hover:bg-[#006EBB] transition-colors focus:outline-none flex items-center justify-center gap-2 w-full sm:w-auto"
+                  className="px-10 py-3.5 bg-[#FF6B1A] text-white font-bold rounded-xl text-[14px] shadow-[0_4px_14px_rgba(255,107,26,0.3)] hover:bg-[#E85D04] transition-all focus:outline-none flex items-center justify-center gap-2 w-full sm:w-auto"
                 >
                   Enviar Proposta de Financiamento ✓
                 </button>
