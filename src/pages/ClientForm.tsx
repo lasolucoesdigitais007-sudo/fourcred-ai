@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { FormData } from '../types';
 import { Input, Select, Textarea, SimNaoButtons } from '../components/FormFields';
+import { DocumentScanner } from '../components/DocumentScanner';
 
 export default function ClientForm() {
   const { register, handleSubmit, watch, setValue, trigger, formState: { errors } } = useForm<FormData>();
@@ -13,6 +14,31 @@ export default function ClientForm() {
   const usedFgts = watch('usedFgts');
   const ownsProperty = watch('ownsProperty');
   const useFgts = watch('useFgts');
+
+  const handleOcrData = (text: string) => {
+    const cleanedText = text.replace(/\n/g, ' ');
+    
+    // Extrahir CPF (000.000.000-00 ou 00000000000)
+    const cpfMatch = cleanedText.match(/\d{3}\.?\d{3}\.?\d{3}-?\d{2}/);
+    if (cpfMatch) {
+      setValue('p1.cpf', cpfMatch[0].replace(/[^\d]/g, '').replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4"), { shouldValidate: true });
+    }
+
+    // Extrahir RG (ex: 12.345.678-9) - Heuristica simples
+    const rgMatch = cleanedText.match(/\d{2}\.?\d{3}\.?\d{3}-?[A-Za-z0-9]{1,2}/);
+    if (rgMatch && !cpfMatch?.[0].includes(rgMatch[0])) {
+      setValue('p1.rg', rgMatch[0], { shouldValidate: true });
+    }
+
+    // Extrahir Data de Nascimento (xx/xx/xxxx)
+    const dateMatch = cleanedText.match(/\b([0-2][0-9]|3[0-1])\/(0[1-9]|1[0-2])\/\d{4}\b/);
+    if (dateMatch) {
+      const [day, month, year] = dateMatch[0].split('/');
+      setValue('p1.dob', `${year}-${month}-${day}`, { shouldValidate: true });
+    }
+
+    console.log("Extracted OCR Text: ", cleanedText);
+  };
 
   const nextStep = async () => {
     let isStepValid = true;
@@ -200,6 +226,8 @@ export default function ClientForm() {
                   <p className="text-[13px] text-[#CBD5E1]">Insira abaixo os dados básicos de identidade do proponente titular da operação.</p>
                 </div>
                 
+                <DocumentScanner onDataExtracted={handleOcrData} />
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-8">
                   <Input label="Nome Completo *" name="p1.fullName" register={register} errors={errors} placeholder="Nome sem abreviações" required />
                   <Input label="CPF *" name="p1.cpf" register={register} errors={errors} placeholder="000.000.000-00" required />
