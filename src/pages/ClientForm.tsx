@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { FormData } from '../types';
@@ -14,6 +14,46 @@ export default function ClientForm() {
   const usedFgts = watch('usedFgts');
   const ownsProperty = watch('ownsProperty');
   const useFgts = watch('useFgts');
+  const p1ZipCode = watch('p1.zipCode');
+  const p2ZipCode = watch('p2.zipCode');
+
+  useEffect(() => {
+    if (p1ZipCode) {
+      const cleanZip = p1ZipCode.replace(/\D/g, '');
+      if (cleanZip.length === 8) {
+        fetch(`https://viacep.com.br/ws/${cleanZip}/json/`)
+          .then(res => res.json())
+          .then(data => {
+            if (!data.erro) {
+              setValue('p1.street', data.logradouro, { shouldValidate: true });
+              setValue('p1.neighborhood', data.bairro, { shouldValidate: true });
+              setValue('p1.city', data.localidade, { shouldValidate: true });
+              setValue('p1.state', data.uf, { shouldValidate: true });
+            }
+          })
+          .catch(err => console.error("CEP Fetch error", err));
+      }
+    }
+  }, [p1ZipCode, setValue]);
+
+  useEffect(() => {
+    if (p2ZipCode) {
+      const cleanZip = p2ZipCode.replace(/\D/g, '');
+      if (cleanZip.length === 8) {
+        fetch(`https://viacep.com.br/ws/${cleanZip}/json/`)
+          .then(res => res.json())
+          .then(data => {
+            if (!data.erro) {
+              setValue('p2.street', data.logradouro, { shouldValidate: true });
+              setValue('p2.neighborhood', data.bairro, { shouldValidate: true });
+              setValue('p2.city', data.localidade, { shouldValidate: true });
+              setValue('p2.state', data.uf, { shouldValidate: true });
+            }
+          })
+          .catch(err => console.error("CEP Fetch error", err));
+      }
+    }
+  }, [p2ZipCode, setValue]);
 
   const handleOcrData = (text: string) => {
     const cleanedText = text.replace(/\n/g, ' ');
@@ -256,15 +296,15 @@ export default function ClientForm() {
               <div>
                 <h3 className="text-xs font-bold text-white uppercase tracking-widest border-b border-[#334155] pb-2 mb-6">Endereço Residencial Atual (P1)</h3>
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
-                  <Input label="Rua / Logradouro *" className="md:col-span-2" name="p1.street" register={register} errors={errors} required />
+                  <Input label="CEP *" name="p1.zipCode" register={register} errors={errors} required placeholder="Ex: 00000-000" />
+                  <Input label="Rua / Logradouro *" className="md:col-span-3" name="p1.street" register={register} errors={errors} required />
                   <Input label="Número *" name="p1.number" register={register} errors={errors} required />
-                  <Input label="Complemento" name="p1.complement" register={register} errors={errors} />
+                  <Input label="Complemento" className="md:col-span-3" name="p1.complement" register={register} errors={errors} />
                   
                   <Input label="Bairro *" className="md:col-span-2" name="p1.neighborhood" register={register} errors={errors} required />
                   <Input label="Cidade *" name="p1.city" register={register} errors={errors} required />
                   <Input label="Estado (UF) *" name="p1.state" register={register} errors={errors} required />
                   
-                  <Input label="CEP *" name="p1.zipCode" register={register} errors={errors} required />
                   <Select label="Tipo Residência *" name="p1.residenceType" register={register} errors={errors} className="md:col-span-2" options={[
                     { label: 'Própria', value: 'propria' }, { label: 'Alugada', value: 'alugada' }, { label: 'Com os pais', value: 'pais' }
                   ]} required />
@@ -360,15 +400,16 @@ export default function ClientForm() {
               <div>
                 <h3 className="text-xs font-bold text-white uppercase tracking-widest border-b border-[#334155] pb-2 mb-6">Endereço Residencial do Proponente 2:</h3>
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-5 mb-8">
-                  <Input label="Rua / Logradouro *" className="md:col-span-2" name="p2.street" register={register} errors={errors} />
+                  <Input label="CEP *" name="p2.zipCode" register={register} errors={errors} placeholder="Ex: 00000-000" />
+                  <Input label="Rua / Logradouro *" className="md:col-span-3" name="p2.street" register={register} errors={errors} />
                   <Input label="Número *" name="p2.number" register={register} errors={errors} />
-                  <Input label="Complemento" name="p2.complement" register={register} errors={errors} />
+                  <Input label="Complemento" name="p2.complement" className="md:col-span-3" register={register} errors={errors} />
                   <Input label="Bairro *" className="md:col-span-2" name="p2.neighborhood" register={register} errors={errors} />
                   <Input label="Cidade *" name="p2.city" register={register} errors={errors} />
                   
                   <Input label="Estado (UF) *" name="p2.state" register={register} errors={errors} />
-                  <Input label="CEP *" name="p2.zipCode" register={register} errors={errors} />
-                  <Input label="Renda Salarial Titular 2 *" name="p2.salary" type="number" step="0.01" register={register} errors={errors} className="md:col-span-2" />
+                  
+                  <Input label="Renda Salarial Titular 2 *" name="p2.salary" type="number" step="0.01" register={register} errors={errors} className="md:col-span-3" />
                   
                   <Input label="Profissão do Titular 2 *" name="p2.profession" className="md:col-span-4" register={register} errors={errors} />
                   <Input label="Empresa Trabalha *" name="p2.company" className="md:col-span-2" register={register} errors={errors} />
