@@ -18,25 +18,31 @@ export function DocumentScanner({ onDataExtracted }: DocumentScannerProps) {
     setResultMessage(null);
 
     const formData = new FormData();
-    formData.append('document', file);
+    formData.append('file', file);
+    formData.append('language', 'por');
+    formData.append('isOverlayRequired', 'false');
+    formData.append('isTable', 'true');
+    formData.append('apikey', import.meta.env.VITE_OCR_API_KEY || 'helloworld');
 
     try {
-      const response = await fetch('/api/ocr', {
+      const response = await fetch('https://api.ocr.space/parse/image', {
         method: 'POST',
         body: formData,
       });
 
       const data = await response.json();
 
-      if (!response.ok) {
-        throw new Error(data.error || data.details || 'Falha na leitura do documento');
+      if (data.IsErroredOnProcessing) {
+        throw new Error(data.ErrorMessage?.[0] || 'Falha na leitura do documento');
       }
 
-      if (data.text) {
-        onDataExtracted(data.text);
+      const parsedText = data?.ParsedResults?.[0]?.ParsedText || "";
+
+      if (parsedText && parsedText.trim().length > 0) {
+        onDataExtracted(parsedText);
         setResultMessage({ type: 'success', text: 'Documento lido com sucesso!' });
       } else {
-        setResultMessage({ type: 'success', text: 'Não foi possível identificar textos legíveis.' });
+        setResultMessage({ type: 'success', text: 'Não foi possível identificar textos legíveis. Tente uma imagem com melhor qualidade.' });
       }
     } catch (err: any) {
       setResultMessage({ type: 'error', text: err.message || 'Erro de conexão com o OCR' });
