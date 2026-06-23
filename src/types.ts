@@ -47,6 +47,7 @@ export interface Proponent {
 
 export interface FormData {
   id: string;
+  userId: string;
   submittedAt: string;
   
   // Proponent 1

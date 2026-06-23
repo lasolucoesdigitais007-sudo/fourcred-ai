@@ -1,0 +1,87 @@
+{
+  "entities": {
+    "Proponent": {
+      "title": "Proponent",
+      "description": "Details of a proponent",
+      "type": "object",
+      "properties": {
+        "fullName": { "type": "string" },
+        "cpf": { "type": "string" },
+        "rg": { "type": "string" },
+        "gender": { "type": "string" },
+        "nationality": { "type": "string" },
+        "placeOfBirth": { "type": "string" },
+        "dob": { "type": "string" },
+        "motherName": { "type": "string" },
+        "maritalStatus": { "type": "string" },
+        "childrenCount": { "type": "string" },
+        "email": { "type": "string" },
+        "secondaryEmail": { "type": "string" },
+        "phoneHome": { "type": "string" },
+        "phoneMobile": { "type": "string" },
+        "phoneMessage": { "type": "string" },
+        "educationLevel": { "type": "string" },
+        "residenceType": { "type": "string" },
+        "residenceTime": { "type": "string" },
+        "residenceAddress": { "type": "string" },
+        "street": { "type": "string" },
+        "number": { "type": "string" },
+        "complement": { "type": "string" },
+        "neighborhood": { "type": "string" },
+        "city": { "type": "string" },
+        "state": { "type": "string" },
+        "zipCode": { "type": "string" },
+        "hasFinancing": { "type": "string" },
+        "financingInstallment": { "type": "number" },
+        "hasLoan": { "type": "string" },
+        "loanInstallment": { "type": "number" },
+        "profession": { "type": "string" },
+        "company": { "type": "string" },
+        "isOwner": { "type": "string" },
+        "currentRole": { "type": "string" },
+        "serviceTime": { "type": "string" },
+        "salary": { "type": "number" },
+        "admissionDate": { "type": "string" },
+        "otherIncomes": { "type": "number" },
+        "otherIncomesOrigin": { "type": "string" }
+      }
+    },
+    "Proposal": {
+      "title": "Proposal",
+      "description": "A financing proposal submitted by a user",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "submittedAt": { "type": "string" },
+        "p1": { "$ref": "#/entities/Proponent" },
+        "hasP2": { "type": "boolean" },
+        "p2Relationship": { "type": "string" },
+        "p2": { "$ref": "#/entities/Proponent" },
+        "usedFgts": { "type": "string" },
+        "fgtsSubsidy": { "type": "string" },
+        "ownsProperty": { "type": "string" },
+        "propertyAddress": { "type": "string" },
+        "propertyFraction": { "type": "number" },
+        "otherAssets": { "type": "string" },
+        "targetPropertyAddress": { "type": "string" },
+        "parkingSpaces": { "type": "string" },
+        "saleValue": { "type": "number" },
+        "downPayment": { "type": "number" },
+        "useFgts": { "type": "string" },
+        "fgtsValue": { "type": "number" },
+        "financingValue": { "type": "number" },
+        "termYears": { "type": "number" },
+        "amortizationSystem": { "type": "string" },
+        "acceptedTerms": { "type": "boolean" }
+      },
+      "required": ["id", "userId", "submittedAt", "p1", "hasP2", "saleValue", "downPayment", "financingValue", "termYears", "acceptedTerms"]
+    }
+  },
+  "firestore": {
+    "proposals/{proposalId}": {
+      "schema": "#/entities/Proposal",
+      "description": "Stores user submitted financing proposals"
+    }
+  }
+}

@@ -205,17 +205,34 @@ export default function ClientForm() {
     setValue('p2.zipCode', watch('p1.zipCode'));
   };
 
-  const onSubmit = (data: FormData) => {
-    const fullData = {
-      ...data,
-      id: Math.random().toString(36).substring(2, 9),
-      submittedAt: new Date().toISOString()
-    };
-    const existing = JSON.parse(localStorage.getItem('fourcred_submissions') || '[]');
-    existing.push(fullData);
-    localStorage.setItem('fourcred_submissions', JSON.stringify(existing));
-    alert('Ficha cadastral enviada com sucesso!');
-    window.location.reload();
+  const onSubmit = async (data: FormData) => {
+    try {
+      // Import Firestore components
+      const { auth, db } = await import('../lib/firebase');
+      const { signInAnonymously } = await import('firebase/auth');
+      const { collection, addDoc } = await import('firebase/firestore');
+      
+      // Ensure user is authenticated anonymously
+      let user = auth.currentUser;
+      if (!user) {
+        const userCredential = await signInAnonymously(auth);
+        user = userCredential.user;
+      }
+
+      const fullData = {
+        ...data,
+        userId: user.uid,
+        submittedAt: new Date().toISOString()
+      };
+
+      await addDoc(collection(db, 'proposals'), fullData);
+
+      alert('Ficha cadastral enviada com sucesso para o banco de dados!');
+      window.location.reload();
+    } catch (error) {
+      console.error("Erro ao salvar proposta: ", error);
+      alert("Houve um erro ao enviar sua proposta. Verifique o console para mais detalhes.");
+    }
   };
 
   const stepsHeader = [
