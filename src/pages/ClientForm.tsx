@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
+import { CheckCircle2 } from 'lucide-react';
 import { FormData } from '../types';
 import { Input, Select, Textarea, SimNaoButtons } from '../components/FormFields';
 import { DocumentScanner } from '../components/DocumentScanner';
@@ -9,6 +10,8 @@ export default function ClientForm() {
   const { register, handleSubmit, watch, setValue, trigger, formState: { errors } } = useForm<FormData>();
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
 
   const hasP2 = watch('hasP2');
   const usedFgts = watch('usedFgts');
@@ -206,7 +209,13 @@ export default function ClientForm() {
   };
 
   const onSubmit = async (data: FormData) => {
+    if (currentStep < 5) {
+      nextStep();
+      return;
+    }
+
     try {
+      setIsSubmitting(true);
       // Import Firestore components
       const { auth, db } = await import('../lib/firebase');
       const { signInAnonymously } = await import('firebase/auth');
@@ -227,11 +236,12 @@ export default function ClientForm() {
 
       await addDoc(collection(db, 'proposals'), fullData);
 
-      alert('Ficha cadastral enviada com sucesso para o banco de dados!');
-      window.location.reload();
+      setIsSuccess(true);
     } catch (error) {
       console.error("Erro ao salvar proposta: ", error);
       alert("Houve um erro ao enviar sua proposta. Verifique o console para mais detalhes.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -245,6 +255,29 @@ export default function ClientForm() {
 
   return (
     <div className="py-8 px-4 sm:px-6 lg:px-8 bg-[#0F172A] text-[#F8FAFC] min-h-screen">
+      
+      {isSuccess && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#0F172A]/90 backdrop-blur-sm p-4">
+          <div className="bg-[#1E293B] border border-[#334155] p-8 rounded-2xl shadow-2xl max-w-sm w-full text-center space-y-6 animate-in fade-in zoom-in duration-300">
+            <div className="w-20 h-20 bg-[#FF6B1A]/10 rounded-full flex items-center justify-center mx-auto">
+              <CheckCircle2 className="w-10 h-10 text-[#FF6B1A]" />
+            </div>
+            <div>
+              <h2 className="text-2xl font-bold text-white mb-2">Sucesso!</h2>
+              <p className="text-[#94A3B8] text-sm">
+                Sua ficha cadastral foi enviada e salva com sucesso no banco de dados. Entraremos em contato em breve.
+              </p>
+            </div>
+            <button
+              onClick={() => window.location.reload()}
+              className="w-full bg-[#FF6B1A] hover:bg-[#FF6B1A]/90 text-white font-semibold py-3 px-6 rounded-lg transition-colors shadow-lg shadow-[#FF6B1A]/20"
+            >
+              Nova Proposta
+            </button>
+          </div>
+        </div>
+      )}
+
       <div className="max-w-5xl mx-auto space-y-0">
         
         {/* Navigation Steps Header */}
@@ -270,7 +303,21 @@ export default function ClientForm() {
         </div>
 
         <div className="bg-[#1E293B] border border-[#334155] rounded-b-xl p-6 sm:p-10 shadow-xl relative z-0 min-h-[500px]">
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-0" noValidate>
+          <form 
+            onSubmit={handleSubmit(onSubmit)} 
+            className="space-y-0" 
+            noValidate
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && (e.target as HTMLElement).tagName !== 'TEXTAREA') {
+                e.preventDefault();
+                if (currentStep < 5) {
+                  nextStep();
+                } else {
+                  handleSubmit(onSubmit)();
+                }
+              }
+            }}
+          >
             
             {/* ================= STEP 1 ================= */}
             <div className={currentStep === 1 ? 'block space-y-12 animate-in fade-in slide-in-from-right-4' : 'hidden'}>
@@ -551,9 +598,17 @@ export default function ClientForm() {
               ) : (
                 <button
                   type="submit"
-                  className="px-10 py-3.5 bg-[#FF6B1A] text-white font-bold rounded-xl text-[14px] shadow-[0_4px_14px_rgba(255,107,26,0.3)] hover:bg-[#E85D04] transition-all focus:outline-none flex items-center justify-center gap-2 w-full sm:w-auto"
+                  disabled={isSubmitting}
+                  className="px-10 py-3.5 bg-[#FF6B1A] text-white font-bold rounded-xl text-[14px] shadow-[0_4px_14px_rgba(255,107,26,0.3)] hover:bg-[#E85D04] transition-all focus:outline-none flex items-center justify-center gap-2 w-full sm:w-auto disabled:opacity-70 disabled:cursor-not-allowed"
                 >
-                  Enviar Proposta de Financiamento ✓
+                  {isSubmitting ? (
+                    <>
+                      <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                      Enviando...
+                    </>
+                  ) : (
+                    'Enviar Proposta de Financiamento ✓'
+                  )}
                 </button>
               )}
             </div>
